@@ -24,8 +24,10 @@ const createHandler = <Value>(initialValue: Value): Handler<Value> => {
     }
     nextId++
     
-    if (opts && opts.emitCurrent)
+    if (opts && opts.emitCurrent && lastValue !== undefined)
       callback(lastValue)
+    else if (opts && opts.emitCurrent && lastValue === undefined)
+      console.warn('Could not emit current since last value was still undefined.')
       
     return subscription
   }
