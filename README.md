@@ -1,5 +1,6 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![npm version](https://badge.fury.io/js/ixortalk-client.svg)](https://badge.fury.io/js/ixortalk-client)
+[![Build Status](https://app.bitrise.io/app/5b2438ba02725800/status.svg?token=z0I4ZJ2JAR8CkyiMG_Seqw&branch=master)](https://app.bitrise.io/app/5b2438ba02725800)
 # IxorTalk Platform Client
 A javascript client library to authenticate and communicate with the open-source IxorTalk platform!  
 
