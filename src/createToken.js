@@ -1,5 +1,5 @@
 // @flow
-import type {Token, TokenResponse} from './clientTypes'
+import type { Token, TokenResponse } from './clientTypes';
 
 const createToken = (tokenResponse: TokenResponse): Token => {
   return {
@@ -7,7 +7,7 @@ const createToken = (tokenResponse: TokenResponse): Token => {
     refreshToken: tokenResponse.refresh_token,
     expiresIn: tokenResponse.expires_in,
     expiryTime: Math.floor(Date.now() / 1000) + tokenResponse.expires_in,
-  }
-}
+  };
+};
 
-export {createToken}
+export { createToken };

@@ -1,6 +1,6 @@
 // @flow
-import {throwingFetch} from '../utils/index'
-import type {Internals, RegisterOpts} from '../clientTypes'
+import { throwingFetch } from '../utils/index';
+import type { Internals, RegisterOpts } from '../clientTypes';
 
 const register = async (opts: RegisterOpts, internals: Internals) => {
   const body = JSON.stringify({
@@ -8,15 +8,15 @@ const register = async (opts: RegisterOpts, internals: Internals) => {
     firstName: opts.firstName,
     lastName: opts.lastName,
     langKey: opts.langKey,
-  })
+  });
 
   await throwingFetch(`${internals.clientConfig.baseUrl}/user-registration`, {
     body,
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-  })
-}
+  });
+};
 
-export {register}
+export { register };

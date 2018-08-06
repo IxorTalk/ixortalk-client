@@ -1,3 +1,4 @@
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 # IxorTalk Platform Client
 A javascript client library to authenticate and communicate with the open-source IxorTalk platform!  
 

@@ -16,6 +16,7 @@
     "authentication"
   ],
   "scripts": {
+    "prettier": "prettier --jsx-bracket-same-line true --single-quote --trailing-comma all --write \"./src/**\"",
     "test": "node node_modules/jest/bin/jest.js --watchAll",
     "test:ci": "jest",
     "flow": "flow",
@@ -38,6 +39,7 @@
     "jest": "^23.4.1",
     "jest-localstorage-mock": "^2.2.0",
     "node-fetch": "^2.1.2",
+    "prettier": "^1.14.0",
     "whatwg-fetch": "^2.0.4"
   },
   "private": false,

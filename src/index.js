@@ -1,6 +1,6 @@
 // @flow
-import {client} from './client'
-export default client
+import { client } from './client';
+export default client;
 export const {
   isInitialized,
   initialize,
@@ -9,15 +9,15 @@ export const {
   register,
   resetPassword,
   confirmPassword,
-  
+
   onAuthChange,
-  
+
   fetch,
   get,
   post,
   put,
   patch,
-  'delete': delete_,
-  
+  delete: delete_,
+
   me,
-} = client
+} = client;
