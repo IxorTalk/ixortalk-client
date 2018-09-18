@@ -437,4 +437,20 @@ describe('client', () => {
       });
     });
   });
+  describe('tokens', () => {
+    beforeEach(reinitialize);
+    test('refresh and persist when a "401"-response is returned', async () => {
+      const body = {test: 'test'}
+      await loginAndMockLogin();
+      fetchMock.get(`${config.baseUrl}/objects/someId`, {status: 401, body: 'invalid_token'}, {repeat: 1});
+      fetchMock.get(`${config.baseUrl}/objects/someId`, body, {overwriteRoutes: false});
+      
+      const response = await client.get('/objects/someId')
+      const responseBody = await response.json()
+      
+      const getCalls = fetchMock.calls(`${config.baseUrl}/objects/someId`)
+      expect(getCalls .length).toEqual(2)
+      expect(responseBody).toEqual(body)
+    })
+  })
 });

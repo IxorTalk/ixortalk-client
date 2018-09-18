@@ -16,7 +16,7 @@ const wrappedFetch = async (
   }
 
   try {
-    return innerCall(endpoint, opts, internals);
+    return await innerCall(endpoint, opts, internals);
   } catch (e) {
     // Try with a new token
     if (
@@ -25,6 +25,7 @@ const wrappedFetch = async (
       e.body.includes('invalid_token') &&
       token
     ) {
+      console.log('retrying')
       token = await refreshToken(token, internals);
       return innerCall(endpoint, opts, { ...internals, token });
     } else {

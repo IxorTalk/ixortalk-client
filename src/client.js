@@ -71,6 +71,13 @@ const persist = (): Promise<void> => {
 
 const setAuth = async (auth: ?{ token: Token, user: User }) => {
   errorOnUninitialized();
+  let notify = true
+  
+  if (auth && (auth.user === _user))
+    notify = false
+  else if (!auth && !_user)
+    notify = false
+  
   if (authChangeHandler) {
     if (auth) {
       _user = auth.user;
@@ -80,9 +87,16 @@ const setAuth = async (auth: ?{ token: Token, user: User }) => {
       _token = null;
     }
     await persist();
-    authChangeHandler.trigger(_user);
+    notify && authChangeHandler.trigger(_user);
   }
 };
+const setToken = async (token: ?Token) => {
+  if (!token)
+    _token = null;
+  else
+    _token = token;
+  await persist()
+}
 
 const getInternals = (client: Client): Internals => {
   errorOnUninitialized();
@@ -99,6 +113,7 @@ const getInternals = (client: Client): Internals => {
       return _user;
     },
     setAuth,
+    setToken,
     self: client,
   };
 };

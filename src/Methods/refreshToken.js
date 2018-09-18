@@ -24,7 +24,7 @@ const refresh = async (token: Token, internals: Internals) => {
 
   const tokenResponse = await response.json();
   const newToken = createToken(tokenResponse);
-  // TODO save new token
+  await internals.setToken(newToken)
   return newToken;
 };
 

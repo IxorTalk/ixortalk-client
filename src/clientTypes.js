@@ -78,6 +78,7 @@ export type Internals = {|
   token: ?Token,
   currentUser: ?User,
   setAuth: (?{ user: User, token: Token }) => Promise<void>,
+  setToken: (?Token) => Promise<void>,
   self: Client,
 |};
 
