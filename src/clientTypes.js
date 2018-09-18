@@ -80,6 +80,7 @@ export type Internals = {|
   setAuth: (?{ user: User, token: Token }) => Promise<void>,
   setToken: (?Token) => Promise<void>,
   self: Client,
+  regenerateInternals: () => Internals,
 |};
 
 export interface Client {

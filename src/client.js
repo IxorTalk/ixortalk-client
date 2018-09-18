@@ -115,6 +115,7 @@ const getInternals = (client: Client): Internals => {
     setAuth,
     setToken,
     self: client,
+    regenerateInternals: () => getInternals(client),
   };
 };
 
