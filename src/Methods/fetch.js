@@ -11,6 +11,7 @@ const wrappedFetch = async (
   internals: Internals,
 ) => {
   let token = internals.token;
+  
   if (token) {
     if (hasExpired(token)) token = await refreshToken(token, internals);
   }
