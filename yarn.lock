@@ -2064,6 +2064,13 @@ istanbul-reports@^1.3.0:
   dependencies:
     handlebars "^4.0.3"
 
+ixortalk-client@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/ixortalk-client/-/ixortalk-client-0.0.14.tgz#f10c13429d09979c99e05e6766cab76caa784eb5"
+  dependencies:
+    base-64 "^0.1.0"
+    fnional "^0.0.5"
+
 jest-changed-files@^23.4.0:
   version "23.4.0"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-23.4.0.tgz#f1b304f98c235af5d9a31ec524262c5e4de3c6ff"

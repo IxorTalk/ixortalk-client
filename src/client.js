@@ -139,6 +139,7 @@ const initialize = (config: Config) => {
 //   }
 // }
 const isInitialized = () => !!clientConfig && !!storage && !!authChangeHandler;
+const getAccessToken = () => _token ? _token.accessToken : null
 const getCurrentUser = () => _user;
 
 const logIn = (args: LogInOpts) => {
@@ -208,6 +209,9 @@ const client: Client = {
 
   get currentUser() {
     return getCurrentUser();
+  },
+  get accessToken() {
+    return getAccessToken()
   },
   onAuthChange,
 
