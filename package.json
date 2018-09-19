@@ -1,6 +1,6 @@
 {
   "name": "ixortalk-client",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A javascript client to integrate with the IxorTalk platform.",
   "author": "stinodes",
   "license": "MIT",
