@@ -3,13 +3,10 @@ import { throwingFetch } from '../utils/index';
 import type { Internals, ResetPWOpts } from '../clientTypes';
 
 const resetPassword = async (opts: ResetPWOpts, internals: Internals) => {
-  const body = JSON.stringify({
-    email: opts.email,
-  });
   await throwingFetch(
     `${internals.clientConfig.baseUrl}/uaa/api/account/reset_password/init`,
     {
-      body,
+      body: opts.email,
       method: 'POST',
       headers: {},
     },

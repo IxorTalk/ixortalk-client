@@ -207,7 +207,7 @@ describe('client', () => {
         `${config.baseUrl}/uaa/api/account/reset_password/init`,
         'POST',
       );
-      expect(JSON.parse(opts.body)).toEqual({ email: 'admin@ixortalk.com' });
+      expect(opts.body).toEqual('admin@ixortalk.com');
     });
   });
 
