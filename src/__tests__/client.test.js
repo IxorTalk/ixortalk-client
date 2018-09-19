@@ -186,6 +186,7 @@ describe('client', () => {
         'POST',
       );
 
+      expect(opts.headers['Content-Type']).toEqual('application/json')
       expect(JSON.parse(opts.body)).toEqual({
         key: '123-this-is-a-key',
         newPassword: 'admin',

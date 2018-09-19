@@ -12,7 +12,9 @@ const confirmPassword = async (opts: ConfirmPWOpts, internals: Internals) => {
     {
       body,
       method: 'POST',
-      headers: {},
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
   );
 };
