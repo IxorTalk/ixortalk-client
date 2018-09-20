@@ -12,6 +12,7 @@ export interface Handler<Arg> {
 const createHandler = <Value>(initialValue: Value): Handler<Value> => {
   let lastValue: Value = initialValue;
   let nextId = 0;
+  let _id = Math.random();
   const handlers = {};
 
   const add = (callback: HandlerCallback<Value>, opts?: ?HandlerAddOpts) => {

@@ -1,7 +1,7 @@
 // @flow
 import { refreshToken } from './refreshToken';
 import { hasExpired, throwingFetch } from '../utils/index';
-import type {FetchOpts, Internals, Token} from '../clientTypes'
+import type { FetchOpts, Internals, Token } from '../clientTypes';
 import { parseOpts } from '../utils';
 
 const baseUrlRegxp = /(^https?:\/\/[a-z0-9\-]+\.(?:[a-z0-9\-_]+\.?)+\/?)/;
@@ -11,7 +11,7 @@ const wrappedFetch = async (
   internals: Internals,
 ) => {
   let token = internals.token;
-  
+
   if (token) {
     if (hasExpired(token)) token = await refreshToken(token, internals);
   }
@@ -26,9 +26,9 @@ const wrappedFetch = async (
       e.body.includes('invalid_token') &&
       token
     ) {
-      console.log('retrying')
+      console.log('retrying');
       await refreshToken(token, internals);
-      const newInternals: Internals = internals.regenerateInternals()
+      const newInternals: Internals = internals.regenerateInternals();
       return innerCall(endpoint, opts, newInternals);
     } else {
       throw e;

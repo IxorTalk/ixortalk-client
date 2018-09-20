@@ -5,6 +5,7 @@ import client from '../index';
 import type { Config } from '../config';
 import { basicAuth, FetchError } from '../utils';
 import { createToken } from '../createToken';
+import { storage } from '../Storage';
 
 fetchMock.config = Object.assign(fetchMock.config, {
   Headers,
@@ -186,7 +187,7 @@ describe('client', () => {
         'POST',
       );
 
-      expect(opts.headers['Content-Type']).toEqual('application/json')
+      expect(opts.headers['Content-Type']).toEqual('application/json');
       expect(JSON.parse(opts.body)).toEqual({
         key: '123-this-is-a-key',
         newPassword: 'admin',
@@ -264,6 +265,17 @@ describe('client', () => {
 
       expect(fetchMock.called(`${config.baseUrl}/logout`)).toEqual(true);
       expect(handler.mock.calls[0]).toEqual([null]);
+    });
+    test.only('Fires callback when user jumps from undefined to null', async () => {
+      const cb = jest.fn();
+      storage.getItem = jest.fn(async () => {
+        // $FlowFixMe
+        return null;
+      });
+      client.onAuthChange(cb, { emitCurrent: true });
+      await new Promise(resolve => setTimeout(resolve, 50));
+      console.log(client.currentUser);
+      expect(cb.mock.calls.length).toEqual(1);
     });
   });
 
@@ -441,17 +453,23 @@ describe('client', () => {
   describe('tokens', () => {
     beforeEach(reinitialize);
     test('refresh and persist when a "401"-response is returned', async () => {
-      const body = {test: 'test'}
+      const body = { test: 'test' };
       await loginAndMockLogin();
-      fetchMock.get(`${config.baseUrl}/objects/someId`, {status: 401, body: 'invalid_token'}, {repeat: 1});
-      fetchMock.get(`${config.baseUrl}/objects/someId`, body, {overwriteRoutes: false});
-      
-      const response = await client.get('/objects/someId')
-      const responseBody = await response.json()
-      
-      const getCalls = fetchMock.calls(`${config.baseUrl}/objects/someId`)
-      expect(getCalls .length).toEqual(2)
-      expect(responseBody).toEqual(body)
-    })
-  })
+      fetchMock.get(
+        `${config.baseUrl}/objects/someId`,
+        { status: 401, body: 'invalid_token' },
+        { repeat: 1 },
+      );
+      fetchMock.get(`${config.baseUrl}/objects/someId`, body, {
+        overwriteRoutes: false,
+      });
+
+      const response = await client.get('/objects/someId');
+      const responseBody = await response.json();
+
+      const getCalls = fetchMock.calls(`${config.baseUrl}/objects/someId`);
+      expect(getCalls.length).toEqual(2);
+      expect(responseBody).toEqual(body);
+    });
+  });
 });

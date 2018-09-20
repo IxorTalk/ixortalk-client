@@ -71,13 +71,11 @@ const persist = (): Promise<void> => {
 
 const setAuth = async (auth: ?{ token: Token, user: User }) => {
   errorOnUninitialized();
-  let notify = true
-  
-  if (auth && (auth.user === _user))
-    notify = false
-  else if (!auth && !_user)
-    notify = false
-  
+  let notify = true;
+
+  if (auth && auth.user === _user) notify = false;
+  else if (auth === null && _user === null) notify = false;
+
   if (authChangeHandler) {
     if (auth) {
       _user = auth.user;
@@ -87,16 +85,15 @@ const setAuth = async (auth: ?{ token: Token, user: User }) => {
       _token = null;
     }
     await persist();
+    console.log('notify?', notify);
     notify && authChangeHandler.trigger(_user);
   }
 };
 const setToken = async (token: ?Token) => {
-  if (!token)
-    _token = null;
-  else
-    _token = token;
-  await persist()
-}
+  if (!token) _token = null;
+  else _token = token;
+  await persist();
+};
 
 const getInternals = (client: Client): Internals => {
   errorOnUninitialized();
@@ -128,7 +125,6 @@ const initialize = (config: Config) => {
   clientConfig = validateConfig(config);
   storage = storageApi;
   authChangeHandler = createHandler(undefined);
-
   retrieve().then(setAuth);
 };
 // const initializeAsync = async () => {
@@ -139,7 +135,7 @@ const initialize = (config: Config) => {
 //   }
 // }
 const isInitialized = () => !!clientConfig && !!storage && !!authChangeHandler;
-const getAccessToken = () => _token ? _token.accessToken : null
+const getAccessToken = () => (_token ? _token.accessToken : null);
 const getCurrentUser = () => _user;
 
 const logIn = (args: LogInOpts) => {
@@ -211,7 +207,7 @@ const client: Client = {
     return getCurrentUser();
   },
   get accessToken() {
-    return getAccessToken()
+    return getAccessToken();
   },
   onAuthChange,
 
