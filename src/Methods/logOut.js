@@ -1,13 +1,17 @@
 // @flow
-import type { Internals } from '../clientTypes';
-import { throwingFetch } from '../utils/request';
-import { wrappedFetch } from './fetch';
+import type { Internals } from "../clientTypes";
+import { throwingFetch } from "../utils/request";
+import { wrappedFetch } from "./fetch";
 
 const logOut = async (internals: Internals) => {
   const token = internals.token;
-  if (!token) throw new Error('You are not logged in at this time.');
+  if (!token) throw new Error("You are not logged in at this time.");
 
-  await wrappedFetch('/logout', {}, internals);
+  try {
+    await wrappedFetch("/logout", {}, internals);
+  } catch (e) {
+    console.log("Log out call failed. Still removing token.", e);
+  }
   await internals.setAuth(null);
 };
 

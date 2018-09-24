@@ -1,17 +1,17 @@
 // @flow
-import { refreshToken } from './refreshToken';
-import { hasExpired, throwingFetch } from '../utils/index';
-import type {FetchOpts, Internals, Token} from '../clientTypes'
-import { parseOpts } from '../utils';
+import { refreshToken } from "./refreshToken";
+import { hasExpired, throwingFetch } from "../utils/index";
+import type { FetchOpts, Internals, Token } from "../clientTypes";
+import { parseOpts } from "../utils";
 
 const baseUrlRegxp = /(^https?:\/\/[a-z0-9\-]+\.(?:[a-z0-9\-_]+\.?)+\/?)/;
 const wrappedFetch = async (
   endpoint: string,
   opts?: FetchOpts = {},
-  internals: Internals,
+  internals: Internals
 ) => {
   let token = internals.token;
-  
+
   if (token) {
     if (hasExpired(token)) token = await refreshToken(token, internals);
   }
@@ -20,15 +20,10 @@ const wrappedFetch = async (
     return await innerCall(endpoint, opts, internals);
   } catch (e) {
     // Try with a new token
-    if (
-      e.status === 401 &&
-      !!e.body &&
-      e.body.includes('invalid_token') &&
-      token
-    ) {
-      console.log('retrying')
+    if (e.status === 401 && token) {
+      console.log("retrying");
       await refreshToken(token, internals);
-      const newInternals: Internals = internals.regenerateInternals()
+      const newInternals: Internals = internals.regenerateInternals();
       return innerCall(endpoint, opts, newInternals);
     } else {
       throw e;
@@ -39,10 +34,10 @@ const wrappedFetch = async (
 const innerCall = (endpoint: string, opts: FetchOpts, internals: Internals) => {
   const parsedOpts = parseOpts(opts, internals);
 
-  let _endpoint = endpoint.replace(internals.clientConfig.baseUrl, '');
+  let _endpoint = endpoint.replace(internals.clientConfig.baseUrl, "");
   if (baseUrlRegxp.test(_endpoint))
     throw new URIError(
-      'Expecting an endpoint from a platform, not a full URL.',
+      "Expecting an endpoint from a platform, not a full URL."
     );
 
   const fullUrl = `${internals.clientConfig.baseUrl}${_endpoint}`;
