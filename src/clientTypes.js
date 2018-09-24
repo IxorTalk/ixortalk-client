@@ -94,7 +94,7 @@ export interface Client {
   resetPassword(ResetPWOpts): Promise<void>;
 
   +currentUser: ?User;
-  +accessToken: ?string,
+  +accessToken: ?string;
   onAuthChange: $PropertyType<Handler<?User>, 'add'>;
 
   me: APICall<>;

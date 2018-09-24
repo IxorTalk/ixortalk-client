@@ -1,18 +1,18 @@
 // @flow
-import { throwIf } from 'fnional';
+import { throwIf } from "fnional";
 
-import { wrappedFetch } from './Methods/fetch';
-import { storage as storageApi } from './Storage';
-import { logIn as internalLogIn } from './Methods/logIn';
-import { logOut as internalLogOut } from './Methods/logOut';
-import { register as internalRegister } from './Methods/register';
-import { confirmPassword as internalConfirmPassword } from './Methods/confirmPassword';
-import { resetPassword as internalResetPassword } from './Methods/resetPassword';
-import { validateConfig } from './config';
-import { createHandler } from './utils/handler';
-import { createAPICall, withMethod } from './utils/request';
+import { wrappedFetch } from "./Methods/fetch";
+import { storage as storageApi } from "./Storage";
+import { logIn as internalLogIn } from "./Methods/logIn";
+import { logOut as internalLogOut } from "./Methods/logOut";
+import { register as internalRegister } from "./Methods/register";
+import { confirmPassword as internalConfirmPassword } from "./Methods/confirmPassword";
+import { resetPassword as internalResetPassword } from "./Methods/resetPassword";
+import { validateConfig } from "./config";
+import { createHandler } from "./utils/handler";
+import { createAPICall, withMethod } from "./utils/request";
 
-import type { Config } from './config';
+import type { Config } from "./config";
 import type {
   Client,
   ConfirmPWOpts,
@@ -23,8 +23,8 @@ import type {
   ResetPWOpts,
   ShortHandFetchOpts,
   Token,
-  User,
-} from './clientTypes';
+  User
+} from "./clientTypes";
 
 let authChangeHandler;
 let clientConfig;
@@ -33,14 +33,14 @@ let _token;
 let _user;
 
 const getStorageKey = () =>
-  (clientConfig && clientConfig.storageKey) || 'IxorTalk Client';
+  (clientConfig && clientConfig.storageKey) || "IxorTalk Client";
 
 const errorOnUninitialized = () =>
   throwIf(
     !isInitialized(),
     new Error(
-      'The IxorTalk client was not yet initialized. Call "initialize" with your app\'s config first.',
-    ),
+      'The IxorTalk client was not yet initialized. Call "initialize" with your app\'s config first.'
+    )
   );
 
 const retrieve = (): Promise<?{ user: User, token: Token }> => {
@@ -50,7 +50,7 @@ const retrieve = (): Promise<?{ user: User, token: Token }> => {
       .getItem(getStorageKey())
       .then(values => (values ? JSON.parse(values) : null));
   }
-  return Promise.reject('No storage?');
+  return Promise.reject("No storage?");
 };
 const persist = (): Promise<void> => {
   errorOnUninitialized();
@@ -59,25 +59,23 @@ const persist = (): Promise<void> => {
     if (_token && _user) {
       const value = JSON.stringify({
         token: _token,
-        user: _user,
+        user: _user
       });
       return storage.setItem(key, value);
     } else {
       return storage.removeItem(key);
     }
   }
-  return Promise.reject('No storage?');
+  return Promise.reject("No storage?");
 };
 
 const setAuth = async (auth: ?{ token: Token, user: User }) => {
   errorOnUninitialized();
-  let notify = true
-  
-  if (auth && (auth.user === _user))
-    notify = false
-  else if (!auth && !_user)
-    notify = false
-  
+  let notify = true;
+
+  if (auth && auth.user === _user) notify = false;
+  else if (auth === null && _user === null) notify = false;
+
   if (authChangeHandler) {
     if (auth) {
       _user = auth.user;
@@ -87,16 +85,15 @@ const setAuth = async (auth: ?{ token: Token, user: User }) => {
       _token = null;
     }
     await persist();
+    console.log("notify?", notify);
     notify && authChangeHandler.trigger(_user);
   }
 };
 const setToken = async (token: ?Token) => {
-  if (!token)
-    _token = null;
-  else
-    _token = token;
-  await persist()
-}
+  if (!token) _token = null;
+  else _token = token;
+  await persist();
+};
 
 const getInternals = (client: Client): Internals => {
   errorOnUninitialized();
@@ -115,7 +112,7 @@ const getInternals = (client: Client): Internals => {
     setAuth,
     setToken,
     self: client,
-    regenerateInternals: () => getInternals(client),
+    regenerateInternals: () => getInternals(client)
   };
 };
 
@@ -123,13 +120,16 @@ const destroy = () => {
   clientConfig = undefined;
   storage = undefined;
   authChangeHandler = undefined;
+  _user = undefined;
+  _token = undefined;
 };
 const initialize = (config: Config) => {
   clientConfig = validateConfig(config);
   storage = storageApi;
   authChangeHandler = createHandler(undefined);
-
-  retrieve().then(setAuth);
+  retrieve()
+    .then(setAuth)
+    .catch(console.warn);
 };
 // const initializeAsync = async () => {
 //   errorOnUninitialized()
@@ -139,7 +139,7 @@ const initialize = (config: Config) => {
 //   }
 // }
 const isInitialized = () => !!clientConfig && !!storage && !!authChangeHandler;
-const getAccessToken = () => _token ? _token.accessToken : null
+const getAccessToken = () => (_token ? _token.accessToken : null);
 const getCurrentUser = () => _user;
 
 const logIn = (args: LogInOpts) => {
@@ -165,7 +165,7 @@ const resetPassword = (args: ResetPWOpts) => {
 
 const onAuthChange = (
   callback: (?User) => any,
-  opts: ?{ emitCurrent?: boolean },
+  opts: ?{ emitCurrent?: boolean }
 ) => {
   errorOnUninitialized();
   if (!authChangeHandler) throw new Error();
@@ -178,22 +178,22 @@ const fetch = (endpoint: string, args?: FetchOpts = {}) => {
   return wrappedFetch(endpoint, args, getInternals(client));
 };
 const get = (endpoint: string, args?: ShortHandFetchOpts = {}) => {
-  return fetch(endpoint, withMethod(args, 'GET'));
+  return fetch(endpoint, withMethod(args, "GET"));
 };
 const post = (endpoint: string, args?: ShortHandFetchOpts = {}) => {
-  return fetch(endpoint, withMethod(args, 'POST'));
+  return fetch(endpoint, withMethod(args, "POST"));
 };
 const put = (endpoint: string, args?: ShortHandFetchOpts = {}) => {
-  return fetch(endpoint, withMethod(args, 'PUT'));
+  return fetch(endpoint, withMethod(args, "PUT"));
 };
 const _delete = (endpoint: string, args?: ShortHandFetchOpts = {}) => {
-  return fetch(endpoint, withMethod(args, 'DELETE'));
+  return fetch(endpoint, withMethod(args, "DELETE"));
 };
 const patch = (endpoint: string, args?: ShortHandFetchOpts = {}) => {
-  return fetch(endpoint, withMethod(args, 'PATCH'));
+  return fetch(endpoint, withMethod(args, "PATCH"));
 };
 
-const me = createAPICall(fetch)('/uaa/user', { method: 'GET' });
+const me = createAPICall(fetch)("/uaa/user", { method: "GET" });
 
 const client: Client = {
   destroy,
@@ -211,7 +211,7 @@ const client: Client = {
     return getCurrentUser();
   },
   get accessToken() {
-    return getAccessToken()
+    return getAccessToken();
   },
   onAuthChange,
 
@@ -222,7 +222,7 @@ const client: Client = {
   delete: _delete,
   patch,
 
-  me,
+  me
 };
 
 export { client };

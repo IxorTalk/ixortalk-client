@@ -5,6 +5,7 @@ import client from "../index";
 import type { Config } from "../config";
 import { basicAuth, FetchError } from "../utils";
 import { createToken } from "../createToken";
+import { storage } from "../Storage";
 
 fetchMock.config = Object.assign(fetchMock.config, {
   Headers,
@@ -270,6 +271,20 @@ describe("client", () => {
 
       expect(fetchMock.called(endpoint(`/logout`))).toEqual(true);
       expect(handler.mock.calls[0]).toEqual([null]);
+    });
+    test("Fires callback when user jumps from undefined to null", async () => {
+      storage.getItem = jest.fn(async () => {
+        await new Promise(resolve => setTimeout(resolve, 50));
+        // $FlowFixMe
+        return null;
+      });
+      const cb = jest.fn();
+
+      client.onAuthChange(cb, { emitCurrent: true });
+
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      expect(cb.mock.calls.length).toEqual(1);
     });
   });
 

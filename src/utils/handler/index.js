@@ -1,6 +1,6 @@
 // @flow
 export type Subscription = {|
-  remove: () => void,
+  remove: () => void
 |};
 type HandlerCallback<Arg> = Arg => any;
 type HandlerAddOpts = { emitCurrent?: boolean };
@@ -12,6 +12,7 @@ export interface Handler<Arg> {
 const createHandler = <Value>(initialValue: Value): Handler<Value> => {
   let lastValue: Value = initialValue;
   let nextId = 0;
+  let _id = Math.random();
   const handlers = {};
 
   const add = (callback: HandlerCallback<Value>, opts?: ?HandlerAddOpts) => {
@@ -20,7 +21,7 @@ const createHandler = <Value>(initialValue: Value): Handler<Value> => {
     const subscription = {
       remove() {
         delete handlers[id];
-      },
+      }
     };
     nextId++;
 
@@ -28,7 +29,7 @@ const createHandler = <Value>(initialValue: Value): Handler<Value> => {
       callback(lastValue);
     else if (opts && opts.emitCurrent && lastValue === undefined)
       console.warn(
-        'Could not emit current since last value was still undefined.',
+        "Could not emit current since last value was still undefined."
       );
 
     return subscription;
@@ -42,7 +43,7 @@ const createHandler = <Value>(initialValue: Value): Handler<Value> => {
 
   return {
     trigger,
-    add,
+    add
   };
 };
 
