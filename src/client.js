@@ -85,7 +85,6 @@ const setAuth = async (auth: ?{ token: Token, user: User }) => {
       _token = null;
     }
     await persist();
-    console.log("notify?", notify);
     notify && authChangeHandler.trigger(_user);
   }
 };
