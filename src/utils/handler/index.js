@@ -6,6 +6,7 @@ type HandlerCallback<Arg> = Arg => any;
 type HandlerAddOpts = { emitCurrent?: boolean };
 export interface Handler<Arg> {
   trigger(Arg): void;
+  triggerError(Error): void;
   add(HandlerCallback<Arg>, ?HandlerAddOpts): Subscription;
 }
 
@@ -40,9 +41,15 @@ const createHandler = <Value>(initialValue: Value): Handler<Value> => {
       .forEach(fn => fn(value));
     lastValue = value;
   };
+  const triggerError = (error: Error) => {
+    const fnArr = Object.keys(handlers)
+      .map(k => handlers[k])
+      .forEach(fn => fn(null, error));
+  };
 
   return {
     trigger,
+    triggerError,
     add
   };
 };

@@ -286,6 +286,14 @@ describe("client", () => {
 
       expect(cb.mock.calls.length).toEqual(1);
     });
+    test("Fires callback with an error when the client is destroyed", async () => {
+      const cb = jest.fn();
+      client.onAuthChange(cb);
+      client.destroy();
+      expect(cb.mock.calls.length).toEqual(1);
+      expect(cb.mock.calls[0][0]).toEqual(null);
+      expect(cb.mock.calls[0][1]).toBeInstanceOf(Error);
+    });
   });
 
   describe("fetch", () => {

@@ -116,6 +116,8 @@ const getInternals = (client: Client): Internals => {
 };
 
 const destroy = () => {
+  authChangeHandler &&
+    authChangeHandler.triggerError(new Error("Client destroyed."));
   clientConfig = undefined;
   storage = undefined;
   authChangeHandler = undefined;
