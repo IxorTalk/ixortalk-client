@@ -1,6 +1,6 @@
 // @flow
-import { getStorage } from './createStorage';
+import { getStorage } from './createStorage'
 
-const storage = getStorage();
+const storage = getStorage()
 
-export { storage };
+export { storage }

@@ -1,6 +1,6 @@
 // @flow
-import { client } from './client';
-export default client;
+import { client } from './client'
+export default client
 export const {
   isInitialized,
   initialize,
@@ -20,4 +20,4 @@ export const {
   delete: delete_,
 
   me,
-} = client;
+} = client

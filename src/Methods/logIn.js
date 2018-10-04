@@ -1,13 +1,13 @@
 // @flow
-import { basicAuth, throwingFetch } from '../utils/index';
-import type { Internals, LogInOpts, User } from '../clientTypes';
-import { createToken } from '../createToken';
+import { basicAuth, throwingFetch } from '../utils/index'
+import type { Internals, LogInOpts, User } from '../clientTypes'
+import { createToken } from '../createToken'
 
 const logIn = async (opts: LogInOpts, internals: Internals): Promise<User> => {
-  const body = new FormData();
-  body.append('username', opts.email);
-  body.append('password', opts.password);
-  body.append('grant_type', 'password');
+  const body = new FormData()
+  body.append('username', opts.email)
+  body.append('password', opts.password)
+  body.append('grant_type', 'password')
   const response = await throwingFetch(
     `${internals.clientConfig.baseUrl}/uaa/oauth/token`,
     {
@@ -20,9 +20,9 @@ const logIn = async (opts: LogInOpts, internals: Internals): Promise<User> => {
         ),
       },
     },
-  );
-  const tokenResponse = await response.json();
-  const token = createToken(tokenResponse);
+  )
+  const tokenResponse = await response.json()
+  const token = createToken(tokenResponse)
 
   const userResponse = await throwingFetch(
     `${internals.clientConfig.baseUrl}/uaa/user`,
@@ -32,12 +32,11 @@ const logIn = async (opts: LogInOpts, internals: Internals): Promise<User> => {
         Authorization: `Bearer ${token.accessToken}`,
       },
     },
-  );
-  const user = await userResponse.json();
+  )
+  const user = await userResponse.json()
+  await internals.setAuth({ token, user })
 
-  await internals.setAuth({ token, user });
+  return user
+}
 
-  return user;
-};
-
-export { logIn };
+export { logIn }

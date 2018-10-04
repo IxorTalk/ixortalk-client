@@ -1,6 +1,6 @@
 // @flow
-import { throwingFetch } from '../utils/index';
-import type { Internals, ResetPWOpts } from '../clientTypes';
+import { throwingFetch } from '../utils/index'
+import type { Internals, ResetPWOpts } from '../clientTypes'
 
 const resetPassword = async (opts: ResetPWOpts, internals: Internals) => {
   await throwingFetch(
@@ -10,7 +10,7 @@ const resetPassword = async (opts: ResetPWOpts, internals: Internals) => {
       method: 'POST',
       headers: {},
     },
-  );
-};
+  )
+}
 
-export { resetPassword };
+export { resetPassword }
