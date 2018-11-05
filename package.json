@@ -40,13 +40,13 @@
     "jest-localstorage-mock": "^2.2.0",
     "node-fetch": "^2.1.2",
     "prettier": "^1.14.0",
-    "whatwg-fetch": "^2.0.4"
+    "whatwg-fetch": "^2.0.4",
+    "merge": ">=1.2.1"
   },
   "private": false,
   "dependencies": {
     "base-64": "^0.1.0",
-    "fnional": "^0.0.5",
-    "ixortalk-client": "^0.0.14"
+    "fnional": "^0.0.5"
   },
   "jest": {
     "setupFiles": [

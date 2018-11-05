@@ -4,22 +4,22 @@ import type {
   FetchType,
   Internals,
   ParsedFetchOpts,
-  WrappedFetchType
-} from "../../clientTypes";
+  WrappedFetchType,
+} from '../../clientTypes'
 
-export type APICall<BodyType: $PropertyType<ParsedFetchOpts, "body"> = void> = (
-  body?: BodyType
-) => Promise<Response>;
+export type APICall<BodyType: $PropertyType<ParsedFetchOpts, 'body'> = void> = (
+  body?: BodyType,
+) => Promise<Response>
 
 export const createAPICall = (fetch: FetchType) => <
-  BodyType: $PropertyType<ParsedFetchOpts, "body">
+  BodyType: $PropertyType<ParsedFetchOpts, 'body'>,
 >(
   endpoint: string,
-  options: FetchOpts = {}
+  options: FetchOpts = {},
 ): APICall<BodyType> => (body?: BodyType) =>
-  fetch(endpoint, { ...options, body });
+  fetch(endpoint, { ...options, body })
 
 export const returnsJSON = <Args: Array<mixed>, R: *>(
-  fn: (...Args) => Promise<Response>
+  fn: (...Args) => Promise<Response>,
 ) => (...args: Args): Promise<R> =>
-  fn(...args).then(response => response.json());
+  fn(...args).then(response => response.json())
