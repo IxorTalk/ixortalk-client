@@ -1,6 +1,6 @@
 {
   "name": "ixortalk-client",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A javascript client to integrate with the IxorTalk platform.",
   "author": "stinodes",
   "license": "MIT",
@@ -38,10 +38,10 @@
     "flow-copy-source": "^2.0.2",
     "jest": "23.1",
     "jest-localstorage-mock": "^2.2.0",
+    "merge": ">=1.2.1",
     "node-fetch": "^2.1.2",
     "prettier": "^1.14.0",
-    "whatwg-fetch": "^2.0.4",
-    "merge": ">=1.2.1"
+    "whatwg-fetch": "^2.0.4"
   },
   "private": false,
   "dependencies": {
