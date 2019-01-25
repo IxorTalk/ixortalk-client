@@ -224,7 +224,7 @@ describe('client', () => {
       expect(error).toBeFalsy()
       expect(client.currentUser).toBeNull()
     })
-    test.only('logs out automatically in case of a 401 and failed token refresh', async () => {
+    test('logs out automatically in case of a 401 and failed token refresh', async () => {
       await loginAndMockLogin()
       fetchMock
         .get(endpoint('/some-call'), 401)
@@ -234,7 +234,10 @@ describe('client', () => {
       const cb = jest.fn()
 
       client.onAuthChange(cb)
-      await client.get('/some-call')
+
+      try {
+        await client.get('/some-call')
+      } catch (e) {}
 
       expect(cb.mock.calls[0]).toEqual([null])
       expect(client.currentUser).toEqual(null)
@@ -603,7 +606,7 @@ describe('client', () => {
       expect(getCallsToken.length).toEqual(1)
       expect(error).toBeInstanceOf(Error)
       // $FlowFixMe
-      expect(error.status).toEqual(401)
+      expect(error).toEqual(new Error('Logged out: Could not refresh token.'))
     })
     test('does not refresh and persist when a "403"-response is returned', async () => {
       const body = { test: 'test' }
