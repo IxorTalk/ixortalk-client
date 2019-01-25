@@ -605,7 +605,6 @@ describe('client', () => {
       expect(getCalls.length).toEqual(1)
       expect(getCallsToken.length).toEqual(1)
       expect(error).toBeInstanceOf(Error)
-      // $FlowFixMe
       expect(error).toEqual(new Error('Logged out: Could not refresh token.'))
     })
     test('does not refresh and persist when a "403"-response is returned', async () => {
