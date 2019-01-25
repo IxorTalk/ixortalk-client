@@ -82,8 +82,13 @@ const refreshAuth = async (auth: ?AuthObj): Promise<?AuthObj> => {
     token = await internalRefreshToken(token, getInternals(client))
     user = await me()
   } catch (e) {
-    console.warn('Could not refresh user or token.')
+    console.warn('Could not refresh user or token.', e)
+    token = null
+    user = null
   } finally {
+    if (!token || !user) {
+      return null
+    }
     return { user, token }
   }
 }
