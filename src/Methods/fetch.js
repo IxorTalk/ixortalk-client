@@ -21,7 +21,6 @@ const wrappedFetch = async (
   } catch (e) {
     // Try with a new token
     if (e.status === 401 && token) {
-      console.log('retrying')
       await refreshToken(token, internals)
       const newInternals: Internals = internals.regenerateInternals()
       return innerCall(endpoint, opts, newInternals)

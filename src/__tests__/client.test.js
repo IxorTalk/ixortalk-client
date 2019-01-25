@@ -224,7 +224,7 @@ describe('client', () => {
       expect(error).toBeFalsy()
       expect(client.currentUser).toBeNull()
     })
-    test('logs out automatically in case of a 401 and failed token refresh', async () => {
+    test.only('logs out automatically in case of a 401 and failed token refresh', async () => {
       await loginAndMockLogin()
       fetchMock
         .get(endpoint('/some-call'), 401)
@@ -232,17 +232,10 @@ describe('client', () => {
         .get(endpoint(`/logout`), 200)
 
       const cb = jest.fn()
-      let error
 
       client.onAuthChange(cb)
+      await client.get('/some-call')
 
-      try {
-        await client.get('/some-call')
-      } catch (e) {
-        error = e
-      }
-
-      expect(error).toEqual(new Error('Logged out: Could not refresh token.'))
       expect(cb.mock.calls[0]).toEqual([null])
       expect(client.currentUser).toEqual(null)
       expect(client.accessToken).toEqual(null)
@@ -493,6 +486,8 @@ describe('client', () => {
         .toBeInstanceOf(Error)
       //$FlowFixMe
       expect(error.status).toEqual(404)
+
+      console.log(error)
       //$FlowFixMe
       expect(error.name).toEqual('Fetch Error: 404')
     })
@@ -606,7 +601,9 @@ describe('client', () => {
       const getCallsToken = fetchMock.calls(endpoint('/uaa/oauth/token'))
       expect(getCalls.length).toEqual(1)
       expect(getCallsToken.length).toEqual(1)
-      expect(error).toEqual(new Error('Logged out: Could not refresh token.'))
+      expect(error).toBeInstanceOf(Error)
+      // $FlowFixMe
+      expect(error.status).toEqual(401)
     })
     test('does not refresh and persist when a "403"-response is returned', async () => {
       const body = { test: 'test' }
