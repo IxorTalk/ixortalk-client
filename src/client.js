@@ -83,8 +83,13 @@ const refreshAuth = async (auth: ?AuthObj): Promise<?AuthObj> => {
     user = await me()
   } catch (e) {
     console.warn('Could not refresh user or token.', e)
-    token = null
-    user = null
+    if (e.message.indexOf('Network request failed') !== -1) {
+      token = auth.token
+      user = auth.user
+    } else {
+      token = null
+      user = null
+    }
   } finally {
     if (!token || !user) {
       return null

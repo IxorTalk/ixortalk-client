@@ -30,6 +30,10 @@ const refresh = async (token: Token, internals: Internals) => {
     await internals.setToken(newToken)
     return newToken
   } catch (e) {
+    if (e.message.indexOf('Network request failed') !== -1) {
+      console.warn('Token could not be refreshed due to a network issue.')
+      throw e
+    }
     await internals.self.logOut()
     throw new Error('Logged out: Could not refresh token.')
   }
