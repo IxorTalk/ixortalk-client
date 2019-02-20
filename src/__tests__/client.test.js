@@ -12,6 +12,7 @@ fetchMock.config = Object.assign(fetchMock.config, {
   Request,
   Response,
 })
+
 describe('client', () => {
   const config: Config = {
     baseUrl: 'https://test.ixortalk.com',
@@ -135,6 +136,35 @@ describe('client', () => {
       expect(client.currentUser).toEqual(null)
       expect(client.accessToken).toEqual(null)
       expect(cb.mock.calls).toEqual([[null]])
+
+      storage.getItem = _getItem
+    })
+    test('Does nothing when refreshing rejects due to a network issue', async () => {
+      const _getItem = storage.getItem
+      const cb = jest.fn()
+      fetchMock.postOnce(endpoint(`/uaa/oauth/token`), {
+        throws: new TypeError('Network request failed'),
+      })
+      fetchMock.getOnce(endpoint(`/uaa/user`), {
+        throws: new TypeError('Network request failed'),
+      })
+      storage.getItem = jest.fn(async () =>
+        JSON.stringify({
+          user: mockUser,
+          token: createToken(mockResponseToken),
+        }),
+      )
+
+      client.initialize(config)
+      client.onAuthChange(cb)
+
+      await new Promise(resolve => setTimeout(resolve, 50))
+
+      expect(client.currentUser).toEqual(mockUser)
+      expect(client.accessToken).toEqual(
+        createToken(mockResponseToken).accessToken,
+      )
+      expect(cb.mock.calls).toEqual([[mockUser]])
 
       storage.getItem = _getItem
     })
@@ -606,6 +636,29 @@ describe('client', () => {
       expect(getCallsToken.length).toEqual(1)
       expect(error).toBeInstanceOf(Error)
       expect(error).toEqual(new Error('Logged out: Could not refresh token.'))
+    })
+    test('does not throw an error when refreshing the token fails due to a network issues', async () => {
+      const body = { test: 'test' }
+      await loginAndMockLogin()
+      fetchMock.restore()
+      fetchMock.get(endpoint(`/objects/someId`), { status: 401, body: null })
+      fetchMock.post(endpoint(`/uaa/oauth/token`), {
+        throws: new TypeError('Network request failed'),
+      })
+
+      let error
+      try {
+        const response = await client.get('/objects/someId')
+      } catch (e) {
+        error = e
+      }
+
+      const getCalls = fetchMock.calls(endpoint('/objects/someId'))
+      const getCallsToken = fetchMock.calls(endpoint('/uaa/oauth/token'))
+      expect(getCalls.length).toEqual(1)
+      expect(getCallsToken.length).toEqual(1)
+      expect(error).toBeInstanceOf(Error)
+      expect(error).toEqual(new TypeError('Network request failed'))
     })
     test('does not refresh and persist when a "403"-response is returned', async () => {
       const body = { test: 'test' }
