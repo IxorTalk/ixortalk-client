@@ -12,6 +12,7 @@ fetchMock.config = Object.assign(fetchMock.config, {
   Request,
   Response,
 })
+
 describe('client', () => {
   const config: Config = {
     baseUrl: 'https://test.ixortalk.com',
